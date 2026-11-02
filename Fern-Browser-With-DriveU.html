@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schoology | Student Portal</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f5f9;color:#253247}
+header{background:#176bce;color:white;padding:17px 25px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:23px;font-weight:bold}
+.layout{display:flex;min-height:100vh}
+nav{width:215px;flex-shrink:0;background:white;padding:20px 12px;border-right:1px solid #ddd}
+nav a{display:block;padding:14px;margin-bottom:6px;border-radius:8px;color:#34445c;text-decoration:none;cursor:pointer}
+nav a:hover,nav a.active{background:#e6f0ff;color:#176bce}
+main{flex:1;padding:30px;min-width:0}
+h1{margin-top:0}
+.search{width:100%;padding:14px;border:1px solid #ddd;border-radius:9px;margin:15px 0 25px;font-size:15px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px}
+.card{background:white;padding:23px;border-radius:12px;box-shadow:0 2px 8px #0000000b}
+.card h3{margin-top:5px}
+.card a{display:inline-block;background:#176bce;color:white;padding:11px 17px;border-radius:7px;text-decoration:none;margin-top:8px}
+.card a:hover{background:#1055a5}
+.icon{font-size:30px}
+.section{display:none}
+.section.active{display:block}
+.notice{background:#e8f2ff;padding:17px;border-radius:10px;margin-bottom:20px}
+footer{margin-top:35px;color:#8993a1;font-size:12px}
+
+/* Fern-inspired Games page */
+.fern-page{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,#30343e 0%,#191b22 48%,#111319 100%);color:white;min-height:80vh;padding:35px;border-radius:14px;text-align:center}
+.fern-page:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;background-image:radial-gradient(#fff 1px,transparent 1.5px),radial-gradient(#9ca9c9 1px,transparent 1.5px);background-size:73px 73px,113px 113px;background-position:0 0,35px 22px}
+.fern-content{position:relative;z-index:1}
+.fern-logo{font-family:Georgia,serif;font-size:54px;font-style:italic;font-weight:bold;margin:38px 0 22px;text-shadow:0 2px 14px #ffffff30}
+.fern-search{width:100%;max-width:600px;padding:15px;border-radius:9px;border:1px solid #555;background:#292c33;color:white;font-size:16px;outline:none}
+.fern-search:focus{border-color:#9aa8c8}
+.fern-label{max-width:600px;margin:25px auto 12px;text-align:left;font-weight:bold;color:#d7d9df}
+.fern-apps{display:grid;grid-template-columns:repeat(4,90px);justify-content:center;gap:10px}
+.fern-app{background:#292c33;color:white;border:1px solid #383b43;border-radius:9px;padding:17px 5px;cursor:pointer;font-size:13px;min-height:83px}
+.fern-app:hover{background:#414550;transform:translateY(-2px)}
+.fern-app .brand-logo{display:block;width:32px;height:32px;object-fit:contain;margin:0 auto 8px}
+.fern-app .brand-fallback{display:none;font-size:25px;margin-bottom:8px}
+/* Fern Browser */
+.fern-browser{margin:28px auto 0;max-width:1050px;text-align:left;background:#20232b;border:1px solid #3c414d;border-radius:13px;overflow:hidden;box-shadow:0 12px 35px #0006}
+.fern-toolbar{display:flex;gap:8px;align-items:center;padding:12px;background:#292d36;border-bottom:1px solid #414653;flex-wrap:wrap}
+.fern-control{border:1px solid #4b5260;background:#363b46;color:#fff;border-radius:7px;padding:9px 12px;cursor:pointer}
+.fern-control:hover{background:#4a5260}
+.fern-address{flex:1;min-width:180px;background:#171a20;color:#fff;border:1px solid #4b5260;border-radius:7px;padding:11px 13px;font-size:14px}
+.fern-go{background:#6679ad;border:0;color:white;border-radius:7px;padding:10px 16px;cursor:pointer}
+.fern-tabs{display:flex;gap:6px;padding:9px 12px;background:#232630;overflow-x:auto}
+.fern-tab{white-space:nowrap;border:1px solid #454b57;background:#303541;color:#dfe3ec;border-radius:7px;padding:8px 12px;cursor:pointer}
+.fern-tab.active{background:#48536d;border-color:#7586ad}
+.fern-viewer{width:100%;height:570px;border:0;background:white;display:block}
+.fern-hint{padding:12px 15px;color:#c3c9d6;background:#292d36;font-size:12px;line-height:1.5}
+.fern-section-title{margin:26px 0 12px;color:#e3e6ed;text-align:left}
+@media(max-width:500px){.fern-apps{grid-template-columns:repeat(3,85px)}.fern-page{padding:15px}.fern-viewer{height:420px}.fern-logo{font-size:46px}}
+@media(max-width:650px){.layout{display:block}nav{width:100%;display:flex;overflow-x:auto}nav a{white-space:nowrap}main{padding:18px}}
+@media(max-width:500px){.fern-apps{grid-template-columns:repeat(3,85px)}.fern-page{padding:15px}.fern-viewer iframe{height:420px}}
+</style>
+</head>
+<body>
+<header><div class="logo">🎓 Schoology</div><div>Student Portal</div></header>
+<div class="layout">
+<nav>
+<a class="active" onclick="showPage('home',this)">🏠 Home</a>
+<a onclick="showPage('classes',this)">📚 My Classes</a>
+<a onclick="showPage('assignments',this)">📝 Assignments</a>
+<a onclick="showPage('games',this)">🎮 Games</a>
+<a onclick="showPage('about',this)">ℹ️ About</a>
+</nav>
+<main>
+<section id="home" class="section active">
+<h1>Welcome back!</h1><p>Your personal student dashboard.</p>
+<input class="search" id="search" placeholder="Search your dashboard..." oninput="searchCards()">
+<div class="notice">📢 <strong>School announcement</strong><br>Welcome to your Schoology student portal!</div>
+<div class="cards">
+<div class="card"><div class="icon">📚</div><h3>My Classes</h3><p>View your courses and lessons.</p><a href="#" onclick="goPage('classes',1);return false">Open classes</a></div>
+<div class="card"><div class="icon">📝</div><h3>Assignments</h3><p>Keep track of schoolwork.</p><a href="#" onclick="goPage('assignments',2);return false">View work</a></div>
+<div class="card"><div class="icon">🎮</div><h3>Games</h3><p>Visit your games section.</p><a href="#" onclick="goPage('games',3);return false">Open games</a></div>
+</div>
+</section>
+<section id="classes" class="section">
+<h1>📚 My Classes</h1><div class="cards">
+<div class="card"><h3>Mathematics</h3><p>Math learning center</p></div>
+<div class="card"><h3>Science</h3><p>Science learning center</p></div>
+<div class="card"><h3>English</h3><p>Reading and writing</p></div>
+<div class="card"><h3>History</h3><p>History learning center</p></div>
+</div></section>
+<section id="assignments" class="section">
+<h1>📝 Assignments</h1><div class="card"><h3>My assignment list</h3><p>Example assignment: Mathematics homework</p><p>Example assignment: Science reading</p><p>Example assignment: English writing</p></div>
+</section>
+<section id="games" class="section">
+<div class="fern-page"><div class="fern-content">
+<div class="fern-logo">fern</div>
+<input class="fern-search" id="fernSearch" placeholder="Search apps..." oninput="searchFernApps()">
+<div class="fern-label">Quick Apps</div>
+<div class="fern-apps" id="fernApps">
+<button class="fern-app" onclick="openFernApp('YouTube','https://www.youtube.com/')"><img class="brand-logo" src="https://cdn.simpleicons.org/youtube/FF0033" alt="YouTube logo"><span class="brand-fallback">▶️</span>YouTube</button>
+<button class="fern-app" onclick="openFernApp('GitHub','https://github.com/')"><img class="brand-logo" src="https://cdn.simpleicons.org/github/FFFFFF" alt="GitHub logo"><span class="brand-fallback">🐙</span>GitHub</button>
+<button class="fern-app" onclick="openFernApp('Discord','https://discord.com/app')"><img class="brand-logo" src="https://cdn.simpleicons.org/discord/5865F2" alt="Discord logo"><span class="brand-fallback">💬</span>Discord</button>
+<button class="fern-app" onclick="openFernApp('TikTok','https://www.tiktok.com/')"><img class="brand-logo" src="https://cdn.simpleicons.org/tiktok/FFFFFF" alt="TikTok logo"><span class="brand-fallback">🎵</span>TikTok</button>
+<button class="fern-app" onclick="openFernApp('Google','https://www.google.com/')"><img class="brand-logo" src="https://cdn.simpleicons.org/google/FFFFFF" alt="Google logo"><span class="brand-fallback">🌐</span>Google</button>
+<button class="fern-app" onclick="openFernApp('X','https://x.com/')"><img class="brand-logo" src="https://cdn.simpleicons.org/x/FFFFFF" alt="X logo"><span class="brand-fallback">𝕏</span>X</button>
+<button class="fern-app" onclick="openFernApp('Roblox','https://www.roblox.com/')"><img class="brand-logo" src="https://cdn.simpleicons.org/roblox/FFFFFF" alt="Roblox logo"><span class="brand-fallback">🎮</span>Roblox</button>
+<button class="fern-app" onclick="openFernApp('Games','https://www.crazygames.com/')"><img class="brand-logo" src="https://www.google.com/s2/favicons?domain=crazygames.com&sz=64" alt="Games logo"><span class="brand-fallback">🟢</span>Games</button>
+<button class="fern-app" onclick="openFernApp('Drive U','https://sites.google.com/view/drive-u-7-home/home')"><img class="brand-logo" src="https://www.google.com/s2/favicons?domain=sites.google.com&sz=64" alt="Drive U logo"><span class="brand-fallback">🚗</span>Drive U</button>
+</div>
+<h3 class="fern-section-title">Fern Browser</h3>
+<div class="fern-browser">
+ <div class="fern-toolbar">
+  <button class="fern-control" onclick="fernBack()" title="Back">←</button>
+  <button class="fern-control" onclick="fernForward()" title="Forward">→</button>
+  <button class="fern-control" onclick="fernRefresh()" title="Refresh">↻</button>
+  <button class="fern-control" onclick="fernHome()" title="Home">⌂</button>
+  <input class="fern-address" id="fernAddress" placeholder="Enter a website (example.com)" onkeydown="if(event.key==='Enter')fernGo()">
+  <button class="fern-go" onclick="fernGo()">Go</button>
+ </div>
+ <div class="fern-tabs" id="fernTabs">
+  <button class="fern-tab active" onclick="fernQuickTab('https://example.com/','Welcome')">Welcome</button>
+  <button class="fern-tab" onclick="fernQuickTab('https://www.wikipedia.org/','Wikipedia')">Wikipedia</button>
+  <button class="fern-tab" onclick="fernQuickTab('https://www.roblox.com/','Roblox')">Roblox</button>
+ </div>
+ <iframe class="fern-viewer" id="fernViewer" title="Fern Browser viewer" src="https://example.com/" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen"></iframe>
+ <div class="fern-hint" id="fernHint">Some websites block being displayed inside another page. If a site refuses to load, use its Quick App shortcut above. This browser does not bypass network restrictions.</div>
+</div>
+</div></div>
+</section>
+<section id="about" class="section">
+<h1>About Schoology</h1><div class="card"><h3>Student Portal</h3><p>This is a personal, locally hosted school-themed dashboard.</p><p>It is not affiliated with the official Schoology service.</p></div>
+</section>
+<footer>Personal Schoology-inspired dashboard · Local edition</footer>
+</main>
+</div>
+<script>
+function showPage(id,link){
+ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+ if(link) link.classList.add('active');
+}
+function goPage(id,index){showPage(id,document.querySelectorAll('nav a')[index]);}
+function searchCards(){
+ const query=document.getElementById('search').value.toLowerCase();
+ document.querySelectorAll('#home .card').forEach(card=>{
+  card.style.display=card.innerText.toLowerCase().includes(query)?'':'none';
+ });
+}
+function openFernApp(name,url){
+  // Navigate in the current browser tab; never create a new tab.
+  window.location.href = url;
+}
+document.querySelectorAll('.brand-logo').forEach(img=>{img.addEventListener('error',()=>{img.style.display='none';const fallback=img.nextElementSibling;if(fallback)fallback.style.display='block';});});
+const fernHistory=['https://example.com/'];
+let fernHistoryIndex=0;
+function fernNavigate(raw){
+  let value=raw.trim();
+  if(!value)return;
+  if(!/^https?:\/\//i.test(value)) value='https://'+value;
+  try{const parsed=new URL(value);if(!['http:','https:'].includes(parsed.protocol))throw new Error('protocol');value=parsed.href;}
+  catch(e){document.getElementById('fernHint').textContent='That address does not look valid. Try a normal website address.';return;}
+  fernHistory.splice(fernHistoryIndex+1);
+  fernHistory.push(value);fernHistoryIndex=fernHistory.length-1;
+  fernShow(value);
+}
+function fernShow(url){
+  document.getElementById('fernAddress').value=url;
+  document.getElementById('fernViewer').src=url;
+  document.getElementById('fernHint').textContent='Loading '+url+' — if the website blocks embedding, open it with its Quick App shortcut above.';
+}
+function fernGo(){fernNavigate(document.getElementById('fernAddress').value);}
+function fernQuickTab(url,label){
+  fernNavigate(url);
+  document.querySelectorAll('.fern-tab').forEach(t=>t.classList.toggle('active',t.textContent===label));
+}
+function fernBack(){if(fernHistoryIndex>0){fernHistoryIndex--;fernShow(fernHistory[fernHistoryIndex]);}}
+function fernForward(){if(fernHistoryIndex<fernHistory.length-1){fernHistoryIndex++;fernShow(fernHistory[fernHistoryIndex]);}}
+function fernRefresh(){document.getElementById('fernViewer').src=document.getElementById('fernViewer').src;}
+function fernHome(){fernNavigate('https://example.com/');}
+function searchFernApps(){
+ const query=document.getElementById('fernSearch').value.toLowerCase();
+ document.querySelectorAll('.fern-app').forEach(app=>{app.style.display=app.innerText.toLowerCase().includes(query)?'':'none';});
+}
+</script>
+</body>
+</html>
